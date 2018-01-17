@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+var string = '';
+
 class Nba extends Component {
   state = {games: []}
 
@@ -13,7 +15,7 @@ class Nba extends Component {
     return (
       <div className="Nba">
         {this.state.games.map(game => 
-          <div key={game.id}>{game.stuff}</div>
+          <span key={game.id}>{game.stuff}, </span>
           )}
       </div>
       // <div>
