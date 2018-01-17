@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+.lynx {
+  padding-left: 40px;
+  height: 480px;
+}
+
+img {
+  height: 480px;
+}

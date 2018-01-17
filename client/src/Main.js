@@ -1,8 +1,8 @@
-import React from 'react'
-import { Switch, Route } from 'react-router-dom'
-import Home from './Home'
-import Nba from './Nba'
-import Ncaa from './Ncaa'
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+import Home from './Home';
+import Nba from './Nba';
+import Ncaa from './Ncaa';
 
 const Main = () => (
   <main>

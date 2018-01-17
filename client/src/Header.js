@@ -1,18 +1,18 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => (
   <header>
     <nav>
-      <div>
+      <span>
         <Link to='/'>Home</Link>
-      </div>
-      <div>
+      </span>
+      <span style={{margin:"0px 0px 0px 40px"}}>
         <Link to='/nba'>NBA</Link>
-      </div>
-      <div>
+      </span>
+      <span style={{margin:"0px 0px 0px 40px"}}>
         <Link to='/ncaa'>NCAA</Link>
-      </div>
+      </span>
     </nav>
   </header>
 )
