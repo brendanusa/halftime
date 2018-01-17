@@ -4,21 +4,20 @@ class Ncaa extends Component {
   state = {games: []}
 
   componentDidMount() {
-    fetch('/table')
+    fetch('/pregame')
       .then(res => res.json())
-      .then(games => this.setState({ games }));
+      // .then(data => console.log(data))
+      .then(data => this.setState({games: this.state.games.concat([data])}))
+      .then(() => console.log('STATE', this.state))
   }
 
   render() {
     return (
       <div className="Ncaa">
         {this.state.games.map(game => 
-          <div key={game.id}>{game.stuff}</div>
+          <div>{game.road.school}</div>
           )}
       </div>
-      // <div>
-      
-      // </div>
     );
   }
 }
