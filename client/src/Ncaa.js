@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './Ncaa.css';
+import Game from './Game.js';
 
 class Ncaa extends Component {
 
@@ -8,14 +10,19 @@ class Ncaa extends Component {
     this.state = {games: [], newGameId: '0'};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(event) {
     this.setState({newGameId: event.target.value});
   }
 
+  handleClick() {
+    this.setState({newGameId: event.target.value})
+  }
+
   handleSubmit(event) {
-    var url = '/pregame?ID=' + this.state.newGameId
+    var url = '/pregame?id=' + this.state.newGameId
     axios.get(url)
       .then(res => this.setState({games: this.state.games.concat([res.data])}))
       .then(() => console.log('GAME RETRIEVED!', this.state))
@@ -32,16 +39,15 @@ class Ncaa extends Component {
 
   render() {
     return (
-      <div>
-        <div className="Ncaa">
-          {this.state.games.map(game => 
-            <div>{game.road.school}, {game.road.srs}, {game.road.sos}, {game.road.twos}, {game.road.threes}, {game.road.reb.toString().slice(0, 5)}, {game.road.ast.toString().slice(0, 5)}, {game.road.to.toString().slice(0, 5)}, {game.home.school}, {game.home.srs}, {game.home.sos}, {game.home.twos}, {game.home.threes}, {game.home.reb.toString().slice(0, 5)}, {game.home.ast.toString().slice(0, 5)}, {game.home.to.toString().slice(0, 5)}, </div>
-            )}
+      <div className="ncaa">
+        <div>
+          {this.state.games.map(game =>
+            <Game game
+          )}
         </div>
-
         <div>
           <form onSubmit={this.handleSubmit}>
-            ENTER NEW GAME ID:
+            Enter Game ID:
             <input type="text" onChange={this.handleChange} />
             <input type="submit" value="Submit" />
           </form>

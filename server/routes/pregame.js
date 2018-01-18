@@ -18,7 +18,7 @@ const buildTeamObj = (team, data) => {
 
 router.get('/', function(req, res, next) {
 
-  let url = 'http://www.espn.com/mens-college-basketball/matchup?gameId=400989204';
+  let url = 'http://www.espn.com/mens-college-basketball/matchup?gameId=' + req.query.id;
 
   axios.get(url)
     .then(res => {
@@ -26,8 +26,8 @@ router.get('/', function(req, res, next) {
       let parent = ($('head title'));
       var road = {school: parent[0].children[0].data.split(' vs. ')[0].replace(' ', '-').toLowerCase()};
       var home = {school: parent[0].children[0].data.split(' vs. ')[1].split(' - ')[0].replace(' ', '-').toLowerCase()};
-      var data = {road: road, home: home};
-      console.log('30', data)
+      var data = {id: req.query.id, road: road, home: home};
+      console.log('32', data)
       return data;
     })
     // ROAD
@@ -35,27 +35,22 @@ router.get('/', function(req, res, next) {
       url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
       return axios.get(url)
         .then(res => {
+          console.log('40')
           $ = cheerio.load(res.data);
           parent = $('#meta').children().first().next().children('p');
           buildTeamObj('road', data);
           return data;
         })
-      return data;
     })
     .then(data => {
-      console.log('46', data)
       url = `https://www.sports-reference.com/cbb/schools/${data.home.school}/2018.html`;
       return axios.get(url)
         .then(res => {
           $ = cheerio.load(res.data);
-          console.log('51', typeof $)
           parent = $('#meta').children().first().next().children('p');
-          console.log('53', parent[5].children[1].data.split('(')[0].replace(' ', '').slice(0, -1))
           buildTeamObj('home', data);
           return data;
         })
-      console.log('55', data)
-      return data;
     })
     .then(data => {
       res.json(data);

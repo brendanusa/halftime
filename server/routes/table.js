@@ -16,7 +16,7 @@ const calculateTwos = (fgs, threes) => {
 
 router.get('/', function(req, res, next) {
 
-  var url = 'http://www.espn.com/nba/matchup?gameId=400975397';
+  var url = 'http://www.espn.com/nba/matchup?gameId=' + req.query.ID;
 
   axios.get(url)
     .then(res => {
