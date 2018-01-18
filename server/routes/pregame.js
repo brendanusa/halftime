@@ -27,7 +27,6 @@ router.get('/', function(req, res, next) {
       var road = {school: parent[0].children[0].data.split(' vs. ')[0].replace(' ', '-').toLowerCase()};
       var home = {school: parent[0].children[0].data.split(' vs. ')[1].split(' - ')[0].replace(' ', '-').toLowerCase()};
       var data = {id: req.query.id, road: road, home: home};
-      console.log('32', data)
       return data;
     })
     // ROAD
@@ -35,7 +34,6 @@ router.get('/', function(req, res, next) {
       url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
       return axios.get(url)
         .then(res => {
-          console.log('40')
           $ = cheerio.load(res.data);
           parent = $('#meta').children().first().next().children('p');
           buildTeamObj('road', data);

@@ -10,15 +10,11 @@ class Ncaa extends Component {
     this.state = {games: [], newGameId: '0'};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(event) {
     this.setState({newGameId: event.target.value});
-  }
-
-  handleClick() {
-    this.setState({newGameId: event.target.value})
   }
 
   handleSubmit(event) {
@@ -42,7 +38,7 @@ class Ncaa extends Component {
       <div className="ncaa">
         <div>
           {this.state.games.map(game =>
-            <Game game
+            <Game game={game} league="mens-college-basketball" />
           )}
         </div>
         <div>
