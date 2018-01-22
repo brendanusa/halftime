@@ -41,7 +41,7 @@ class Game extends Component {
           })
         break;
       case 'Halftime!':
-        var url = `/ingame?league=${this.props.league}&id=${this.props.game.id}`;
+        url = `/ingame?league=${this.props.league}&id=${this.props.game.id}`;
         axios.get(url)
           .then(res => this.setState({
             half: {

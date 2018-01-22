@@ -3,6 +3,41 @@ var router = express.Router();
 const cheerio = require('cheerio');
 const axios = require ('axios');
 
+const schoolNameMap = {
+  'tenn-martin': 'tennessee-martin',
+  'siu-edwardsville': 'southern-illinois-edwardsville',
+  'csu-bakersfield': 'cal-state-bakersfield',
+  'ole-miss': 'mississippi',
+  'miami-(oh)': 'miami-oh',
+  'liu-brooklyn': 'long-island-university',
+  'central-connecticut': 'central-connecticut-state',
+  'tcu': 'texas-christian',
+  'texas-a&m': 'texas-am',
+  'unc-greensboro': 'north-carolina-greensboro',
+  'southern-miss': 'southern-mississippi',
+  'unlv': 'nevada-las-vegas',
+  'smu': 'southern-methodist',
+  'ucf': 'central-florida',
+  'little-rock': 'arkansas-little-rock',
+  'csu-northridge': 'cal-state-northridge',
+  'florida-intl': 'florida-international',
+  'uab': 'alabama-birmingham',
+  'william-& mary': 'william-mary',
+  'unc-wilmington': 'north-carolina-wilmington',
+  'san-diego state': 'san-diego-state',
+  'usc': 'southern-california',
+  'utep': 'texas-el-paso',
+  'ut-san antonio': 'texas-san-antonio',
+  'byu': 'brigham-young',
+  'saint-mary\'s': 'saint-marys-ca',
+  'cs-fullerton': 'cal-state-fullerton',
+  'long-beach state': 'long-beach-state',
+  'uc-davis': 'california-davis',
+  'hawai\'i': 'hawaii',
+  'uc-irvine': 'california-irvine',
+  'uc-santa barbara': 'california-santa-barbara'
+}
+
 const buildTeamObj = (team, data) => {
   data[team].srs = parent[5].children[1].data.split('(')[0].replace(' ', '').slice(0, -1);
   data[team].sos = parent[6].children[1].data.split('(')[0].replace(' ', '').slice(0, -1);
@@ -16,7 +51,7 @@ const buildTeamObj = (team, data) => {
   return data;
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
 
   let url = 'http://www.espn.com/mens-college-basketball/matchup?gameId=' + req.query.id;
 
@@ -31,6 +66,10 @@ router.get('/', function(req, res, next) {
     })
     // ROAD
     .then(data => {
+      console.log('ROAD TEAM', data.road.school)
+      if (schoolNameMap[data.road.school]) {
+        data.road.school = schoolNameMap[data.road.school];
+      }
       url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
       return axios.get(url)
         .then(res => {
@@ -40,7 +79,12 @@ router.get('/', function(req, res, next) {
           return data;
         })
     })
+    // HOME
     .then(data => {
+      console.log('HOME TEAM', data.home.school)
+      if (schoolNameMap[data.home.school]) {
+        data.home.school = schoolNameMap[data.home.school];
+      }
       url = `https://www.sports-reference.com/cbb/schools/${data.home.school}/2018.html`;
       return axios.get(url)
         .then(res => {
@@ -54,7 +98,7 @@ router.get('/', function(req, res, next) {
       res.json(data);
     })
     .catch(err => {
-      console.log('there has been an error: ', err)
+      console.log('there has been an error')
     });
 
 
