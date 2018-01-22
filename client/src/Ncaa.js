@@ -7,58 +7,74 @@ class Ncaa extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {games: [], newGameIds: ''};
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleClick = this.handleClick.bind(this);
+    this.state = {games: [], newGameIDs: '', date: ''};
+    this.handleIDsChange = this.handleIDsChange.bind(this);
+    this.handleIDsSubmit = this.handleIDsSubmit.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleDateSubmit = this.handleDateSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({newGameIds: [event.target.value]});
+  handleIDsChange(event) {
+    this.setState({newGameIDs: [event.target.value]});
   }
 
-  handleSubmit(event) {
-    console.log('21', this.state.newGameIds)
-    var tempStr = this.state.newGameIds.join()
-    console.log('23', tempStr)
-    var tempArr = tempStr.split(',');
-    console.log('25', tempArr)
-    // tempArr.forEach(gameId => {
-    //   console.log('23', gameId)
-    //   var url = '/pregame?id=' + gameId
-    //   axios.get(url)
-    //     .then(res => this.setState({games: this.state.games.concat([res.data])}))
-    //     .then(() => console.log('GAME RETRIEVED!', this.state))
-    // })
+  handleIDsSubmit(event) {
+    var idsStr = this.state.newGameIDs.join()
+    var idsArr = idsStr.split(',');
     let i = 0;
-    const fetchGame = (gameId) => {
-      var url = '/pregame?id=' + gameId
+    const fetchGame = (gameID) => {
+      var url = '/pregame?id=' + gameID
       axios.get(url)
         .then(res => this.setState({games: this.state.games.concat([res.data])}))
         .then(() => {
           console.log('GAME RETRIEVED!', this.state);
           i++
-          tempArr[i] ? fetchGame(tempArr[i]) : null;
+          idsArr[i] ? fetchGame(idsArr[i]) : null;
           return;
         })
     }
-    fetchGame(tempArr[i]);
+    fetchGame(idsArr[i]);
+  }
 
+  handleDateChange(event) {
+    this.setState({date: [event.target.value]});
+  }
+
+  handleDateSubmit(event) {
+    var url = '/scoreboard?date=' + this.state.date;
+      axios.get(url)
+        .then(res => this.setState({newGameIDs: [res.data]}))
+        .then(() => {
+          console.log('GAME IDs UPDATED!', this.state);
+        })
+        .then(() => {
+          this.handleIDsSubmit();
+        })
   }
 
   render() {
     return (
       <div className="ncaa">
-      <h1 style={{"text-align": "left"}}>NCAA</h1>
+      <h1 style={{"textAlign": "left"}}>NCAA</h1>
         <div>
           {this.state.games.map(game =>
             <Game game={game} league="mens-college-basketball" />
           )}
         </div>
         <div>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleIDsSubmit}>
             Enter Game IDs:
-            <input type="text" onChange={this.handleChange} />
+            <input type="text" value={this.newGameIDs} onChange={this.handleIDsChange} />
+            <input type="submit" value="Submit" />
+          </form>
+        </div>
+        <div>
+          -OR-
+        </div>
+        <div>
+          <form onSubmit={this.handleDateSubmit}>
+            Enter Date (YYYYMMDD):
+            <input type="text" onChange={this.handleDateChange} />
             <input type="submit" value="Submit" />
           </form>
         </div>

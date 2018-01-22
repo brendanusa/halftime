@@ -35,7 +35,15 @@ const schoolNameMap = {
   'uc-davis': 'california-davis',
   'hawai\'i': 'hawaii',
   'uc-irvine': 'california-irvine',
-  'uc-santa barbara': 'california-santa-barbara'
+  'uc-santa barbara': 'california-santa-barbara',
+  'north-carolina a&t': 'north-carolina-at',
+  'north-carolina central': 'north-carolina-central',
+  'maryland-eastern shore': 'maryland-eastern-shore',
+  'south-carolina state': 'south-carolina-state',
+  'alabama-a&m': 'alabama-am',
+  'mississippi-valley state': 'mississippi-valley-state',
+  'prairie-view a&m': 'prairie-view',
+  'arkansas-pine bluff': 'arkansas-pine-bluff'
 }
 
 const buildTeamObj = (team, data) => {
