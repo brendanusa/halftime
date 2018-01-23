@@ -53,9 +53,15 @@ const buildTeamObj = (team, data) => {
   const games = parseInt(parent[0].children[1].children[0].data);
   data[team].twos = parent[0].children[8].children[0].data;
   data[team].threes = parent[0].children[11].children[0].data;
-  data[team].reb = parseInt(parent[0].children[17].children[0].data)/games;
-  data[team].ast = parseInt(parent[0].children[18].children[0].data)/games;
-  data[team].to = parseInt(parent[0].children[21].children[0].data)/games;
+  const oppParent = $('#team_stats tbody').children().first().next().next();
+  data[team].opptwos = oppParent[0].children[8].children[0].data;
+  data[team].oppthrees = oppParent[0].children[11].children[0].data;
+  data[team].rebdiff = ((parseInt(parent[0].children[17].children[0].data) - parseInt(oppParent[0].children[17].children[0].data)) / games).toString().slice(0, 5);
+  data[team].astdiff = ((parseInt(parent[0].children[18].children[0].data) - parseInt(oppParent[0].children[18].children[0].data)) / games).toString().slice(0, 5);
+  data[team].todiff = ((parseInt(parent[0].children[21].children[0].data) - parseInt(oppParent[0].children[21].children[0].data)) / games).toString().slice(0, 5);
+
+  console.log(data)
+
   return data;
 }
 
