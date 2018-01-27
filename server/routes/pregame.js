@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const cheerio = require('cheerio');
 const axios = require ('axios');
 
@@ -43,7 +43,28 @@ const schoolNameMap = {
   'alabama-a&m': 'alabama-am',
   'mississippi-valley state': 'mississippi-valley-state',
   'prairie-view a&m': 'prairie-view',
-  'arkansas-pine bluff': 'arkansas-pine-bluff'
+  'arkansas-pine bluff': 'arkansas-pine-bluff',
+  'bowling-green': 'bowling-green-state',
+  'loyola-chicago': 'loyola-il',
+  'south-dakota state': 'south-dakota-state',
+  'miami': 'miami-fl',
+  'nc-state': 'north-carolina-state',
+  'charleston': 'college-of-charleston',
+  'ut-arlington': 'texas-arlington',
+  'omaha': 'nebraska-omaha',
+  'north-dakota state': 'north-dakota-state',
+  'louisiana': 'louisiana-lafayette',
+  'ul-monroe': 'louisiana-monroe',
+  'mt.-st. mary\'s': 'mount-st-marys',
+  'st.-francis (pa)': 'saint-francis-pa',
+  'saint-peter\'s': 'saint-peters',
+  'the-citadel': 'citadel',
+  'st.-francis (bkn)': 'st-francis-ny',
+  'portland-st': 'portland-state',
+  'uic': 'illinois-chicago',
+  'san-jose state': 'san-jose-state',
+  'vmi': 'virginia-military-institute',
+  'fort-wayne': 'ipfw'
 }
 
 const buildTeamObj = (team, data) => {
@@ -60,8 +81,6 @@ const buildTeamObj = (team, data) => {
   data[team].astdiff = ((parseInt(parent[0].children[18].children[0].data) - parseInt(oppParent[0].children[18].children[0].data)) / games).toString().slice(0, 5);
   data[team].todiff = ((parseInt(parent[0].children[21].children[0].data) - parseInt(oppParent[0].children[21].children[0].data)) / games).toString().slice(0, 5);
 
-  console.log(data)
-
   return data;
 }
 
@@ -73,9 +92,9 @@ router.get('/', (req, res, next) => {
     .then(res => {
       let $ = cheerio.load(res.data);
       let parent = ($('head title'));
-      var road = {school: parent[0].children[0].data.split(' vs. ')[0].replace(' ', '-').toLowerCase()};
-      var home = {school: parent[0].children[0].data.split(' vs. ')[1].split(' - ')[0].replace(' ', '-').toLowerCase()};
-      var data = {id: req.query.id, road: road, home: home};
+      const road = {school: parent[0].children[0].data.split(' vs. ')[0].replace(' ', '-').toLowerCase()};
+      const home = {school: parent[0].children[0].data.split(' vs. ')[1].split(' - ')[0].replace(' ', '-').toLowerCase()};
+      const data = {id: req.query.id, road: road, home: home};
       return data;
     })
     // ROAD
@@ -112,7 +131,7 @@ router.get('/', (req, res, next) => {
       res.json(data);
     })
     .catch(err => {
-      console.log('there has been an error')
+      console.log('there has been an error - check school name')
     });
 
 

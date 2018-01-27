@@ -60,7 +60,8 @@ class Game extends Component {
                 reb: res.data.home.reb,
                 ast: res.data.home.ast,
                 to: res.data.home.to
-              }
+              },
+              confirm: res.data.confirm
             },
             gameStateDisplay: 'It\'s over!'})
           )
@@ -130,6 +131,8 @@ class Game extends Component {
           {this.state.full.home.reb || null},
           {this.state.full.home.ast || null},
           {this.state.full.home.to || null},
+
+          {this.state.half.confirm || null},
 
             <button onClick={this.handleClick}>{this.state.gameStateDisplay}</button>
           </div>

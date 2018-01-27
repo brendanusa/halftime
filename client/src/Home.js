@@ -5,7 +5,7 @@ import './Home.css';
 const Home = () => (
   <div>
     <h1>HALFTIME</h1>
-    <h4>A CSV data generator for basketball games for those who love looking at CSV during basketball games</h4>
+    <h4>A CSV data generator for lovers of basketball and commas</h4>
     <div>
       <span>
         <Link class='lynx' to='/nba' style={{width:"320px;"}}>

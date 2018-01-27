@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const cheerio = require('cheerio');
 const axios = require ('axios');
 
@@ -16,19 +16,19 @@ const deleteSpace = (string) => {
 const calculateTwos = (fgs, threes) => {
   const twosMade = parseInt(fgs.split('-')[0]) - parseInt(threes.split('-')[0]);
   const twosAtt = parseInt(fgs.split('-')[1]) - parseInt(threes.split('-')[1]);
-  var ratio = twosMade/twosAtt;
+  const ratio = twosMade/twosAtt;
   return ratio.toString().slice(1, 5);
 }
 
 router.get('/', function(req, res, next) {
 
-  var url = `http://www.espn.com/${req.query.league}/matchup?gameId=${req.query.id}`;
+  const url = `http://www.espn.com/${req.query.league}/matchup?gameId=${req.query.id}`;
 
   axios.get(url)
     .then(res => {
       let $ = cheerio.load(res.data);
-      var road = {};
-      var home = {};
+      const road = {};
+      const home = {};
       const cells = $('.mod-data tbody').children('tr').children('td');
       road.pts = $('.score.icon-font-after')[0].children[0].data;
       road.twos = calculateTwos(deleteSpace(cells[1].children[0].data), deleteSpace(cells[7].children[0].data));
@@ -44,7 +44,8 @@ router.get('/', function(req, res, next) {
       home.reb = deleteSpace(cells[20].children[0].data);
       home.ast = deleteSpace(cells[32].children[0].data);
       home.to = deleteSpace(cells[41].children[0].data);
-      var data = {road: road, home: home}
+      const confirm = $('body #global-viewport #pane-main #custom-nav #gamepackage-header-wrap #gamepackage-matchup-wrap').children().first().find('.status-detail');
+      const data = {road: road, home: home, confirm: confirm[0].children[0].data}
       return data;
     })
     .then(data => {
