@@ -1,6 +1,8 @@
-urls = ['http://www.espn.com/mens-college-basketball/game?gameId=400986227','http://www.espn.com/mens-college-basketball/game?gameId=400986533','']
+urls = ['http://www.espn.com/mens-college-basketball/game?gameId=400987339'];
 
-gameIDs = urls.map(url => parseInt(url.replace('http://www.espn.com/mens-college-basketball/game?gameId=',''))).toString();
+gameIDsRows = urls.map(url => parseInt(url.replace('http://www.espn.com/mens-college-basketball/game?gameId=',''))).toString();
 
-console.log(gameIDs)
+gameIDsString = urls.map(url => url.replace('http://www.espn.com/mens-college-basketball/game?gameId=','')).join()
+
+console.log(gameIDsString)
 

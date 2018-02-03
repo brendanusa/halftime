@@ -43,7 +43,9 @@ class Ncaa extends Component {
   handleDateSubmit(event) {
     var url = '/scoreboard?date=' + this.state.date;
       axios.get(url)
-        .then(res => this.setState({newGameIDs: [res.data]}))
+        .then(res => {
+          this.setState({newGameIDs: [res.data]})
+        })
         .then(() => {
           console.log('GAME IDs UPDATED!', this.state);
         })

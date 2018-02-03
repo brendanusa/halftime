@@ -64,7 +64,26 @@ const schoolNameMap = {
   'uic': 'illinois-chicago',
   'san-jose state': 'san-jose-state',
   'vmi': 'virginia-military-institute',
-  'fort-wayne': 'ipfw'
+  'fort-wayne': 'ipfw',
+  'lsu': 'louisiana-state',
+  'east-tennessee state': 'east-tennessee-state',
+  'sam-houston state': 'sam-houston-state',
+  'stephen-f. austin': 'stephen-f-austin',
+  'saint-joseph\'s': 'saint-josephs',
+  'albany': 'albany-ny',
+  'florida-gulf coast': 'florida-gulf-coast',
+  'southeast-missouri state': 'southeast-missouri-state',
+  'uc-riverside': 'california-riverside',
+  'st.-bonaventure': 'st-bonaventure',
+  'south-carolina upstate': 'south-carolina-upstate',
+  'mcneese': 'mcneese-state',
+  'umass-lowell': 'massachusetts-lowell',
+  'umbc': 'maryland-baltimore-county',
+  'loyola-(md)': 'loyola-md',
+  'texas-a&m-cc': 'texas-am-corpus-christi',
+  'se-louisiana': 'southeastern-louisiana',
+  'st.-john\'s': 'st-johns-ny',
+  'unc-asheville': 'north-carolina-asheville'
 }
 
 const buildTeamObj = (team, data) => {
