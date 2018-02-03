@@ -72,11 +72,16 @@ class Game extends Component {
     }
   }
 
+  componentDidMount() {
+    
+  }
+
   render() {
     return (
       <div>
         <div>
           {this.props.game.id},
+          {this.props.game.tipoff},
 
           {this.props.game.road.school},
           {this.props.game.road.srs},
