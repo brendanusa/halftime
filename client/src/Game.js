@@ -14,8 +14,8 @@ class Game extends Component {
 
   task() {
     if (this.props.game.tipoff === 'in progress') {
-      console.log('game already in progress! must retrieve halftime data manually!')
-    } else {
+      console.log('game already in progress - must retrieve halftime data manually!')
+    } else if (this.props.game.tipoff !== 'final') {
       // retrieve halftime data 55 mins (in ms) after tipoff
       let halftime = new Date(this.props.game.tipoff);
       halftime = new Date(halftime.getTime() + 3300000);
@@ -91,6 +91,15 @@ class Game extends Component {
 
   componentDidMount() {
     this.task();
+  }
+
+  componentWillReceiveProps() {
+    if (this.props.clicked) {
+      const delayedClick = () => {
+        setTimeout(this.handleClick, Math.random() * this.props.delay);
+      }
+      delayedClick();
+    }
   }
 
   render() {

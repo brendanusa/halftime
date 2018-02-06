@@ -115,7 +115,7 @@ router.get('/', (req, res, next) => {
       const home = {school: parent[0].children[0].data.split(' vs. ')[1].split(' - ')[0].replace(' ', '-').toLowerCase()};
       const data = {id: req.query.id, road: road, home: home};
       parent = ($('body  #global-viewport #pane-main #custom-nav #gamepackage-header-wrap #gamepackage-matchup-wrap header .competitors .game-status span[data-behavior="date_time"]'));
-      data.tipoff = parent[0].attribs['data-date'];
+      data.tipoff = parent[0] ? parent[0].attribs['data-date'] : 'final';
       return data;
     })
     // ROAD

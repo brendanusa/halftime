@@ -7,11 +7,12 @@ class Ncaa extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {games: [], newGameIDs: '', date: ''};
+    this.state = {games: [], newGameIDs: '', date: '', clicked: false, updateMultipleDelay: 0};
     this.handleIDsChange = this.handleIDsChange.bind(this);
     this.handleIDsSubmit = this.handleIDsSubmit.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleDateSubmit = this.handleDateSubmit.bind(this);
+    this.handleClickAll = this.handleClickAll.bind(this);
   }
 
   handleIDsChange(event) {
@@ -54,13 +55,20 @@ class Ncaa extends Component {
         })
   }
 
+  handleClickAll() {
+    this.setState({
+      clicked: true, 
+      updateMultipleDelay: this.state.games.length * 1000
+    })
+  }
+
   render() {
     return (
       <div className="ncaa">
       <h1 style={{"textAlign": "left"}}>NCAA</h1>
         <div>
           {this.state.games.map(game =>
-            <Game game={game} league="mens-college-basketball" />
+            <Game game={game} league="mens-college-basketball" clicked={this.state.clicked} delay={this.state.updateMultipleDelay} />
           )}
         </div>
         <div>
@@ -79,6 +87,9 @@ class Ncaa extends Component {
             <input type="text" onChange={this.handleDateChange} />
             <input type="submit" value="Submit" />
           </form>
+        </div>
+        <div>
+        <button type="button" onClick={this.handleClickAll}>Retrieve Data For All Games</button>
         </div>
       </div>
     );
