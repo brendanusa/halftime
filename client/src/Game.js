@@ -1,12 +1,29 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+const schedule = require('node-schedule');
+
 class Game extends Component {
 
   constructor(props) {
     super(props);
     this.state = {gameStateDisplay: 'Halftime!', half: {road: {}, home: {}}, full: {road: {}, home: {}}};
     this.handleClick = this.handleClick.bind(this);
+    this.task = this.task.bind(this);
+  }
+
+  task() {
+    if (this.props.game.tipoff === 'in progress') {
+      console.log('game already in progress! must retrieve halftime data manually!')
+    } else {
+      // retrieve halftime data 55 mins (in ms) after tipoff
+      let halftime = new Date(this.props.game.tipoff);
+      halftime = new Date(halftime.getTime() + 3300000);
+      schedule.scheduleJob(halftime, () => {
+        console.log('HALFTIME DATA RETRIEVED AT: ', new Date());
+        this.handleClick();
+      });
+    }
   }
 
   handleClick() {
@@ -73,7 +90,7 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    
+    this.task();
   }
 
   render() {
@@ -81,7 +98,7 @@ class Game extends Component {
       <div>
         <div>
           {this.props.game.id},
-          {this.props.game.tipoff},
+          {this.props.game.tipoff || 'in progress'},
 
           {this.props.game.road.school},
           {this.props.game.road.srs},
