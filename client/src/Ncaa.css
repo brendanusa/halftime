@@ -3,6 +3,22 @@
   padding: 20px;
 }
 
+.actions {
+  font-size: 12px;
+}
+
+#actions-container {
+  margin-top: 10px;
+  border: 2px solid;
+  border-radius: 5px;
+  padding: 5px;
+  width: 520px;
+}
+
+input {
+  margin-left: 5px;
+}
+
 button {
-  margin-left: 10px;
+  margin-left: 5px;
 }

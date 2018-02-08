@@ -71,25 +71,31 @@ class Ncaa extends Component {
             <Game game={game} league="mens-college-basketball" clicked={this.state.clicked} delay={this.state.updateMultipleDelay} />
           )}
         </div>
-        <div>
-          <form onSubmit={this.handleIDsSubmit}>
-            Enter Game IDs:
-            <input type="text" value={this.newGameIDs} onChange={this.handleIDsChange} />
-            <input type="submit" value="Submit" />
-          </form>
-        </div>
-        <div>
-          -OR-
-        </div>
-        <div>
-          <form onSubmit={this.handleDateSubmit}>
-            Enter Date (YYYYMMDD):
-            <input type="text" onChange={this.handleDateChange} />
-            <input type="submit" value="Submit" />
-          </form>
-        </div>
-        <div>
-        <button type="button" onClick={this.handleClickAll}>Retrieve Data For All Games</button>
+        <div id="actions-container">
+          <div className="actions">
+            <form onSubmit={this.handleIDsSubmit}>
+              Enter Game IDs (separate with commas to select multiple):
+              <input type="text" value={this.newGameIDs} onChange={this.handleIDsChange} />
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
+          <div>
+            -OR-
+          </div>
+          <div className="actions">
+            <form onSubmit={this.handleDateSubmit}>
+              Enter Date to load all games on that day (YYYYMMDD):
+              <input type="text" onChange={this.handleDateChange} />
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
+          <div>
+            -THEN, IF YOU'RE FEELING FANCY-
+          </div>
+          <div className="actions">
+            Click here to retrieve data for all games:
+            <button type="button" onClick={this.handleClickAll}>Update All</button>
+          </div>
         </div>
       </div>
     );
