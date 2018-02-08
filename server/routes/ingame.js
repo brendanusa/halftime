@@ -3,21 +3,26 @@ const router = express.Router();
 const cheerio = require('cheerio');
 const axios = require ('axios');
 
-// OLD NBA/HALFTIME CODE
-// console.log('AST?', cells[28].children[0].data)
-// road.ast = deleteSpace(cells[28].children[0].data);
-// console.log('to?', cells[37].children[0].data)
-// road.to = deleteSpace(cells[37].children[0].data);
-
+// removes spaces inside game data table cells
 const deleteSpace = (string) => {
   return string.replace('\n\t\t\t\t\t\t\t\t\t\t', '').replace('\n\t\t\t\t\t\t\t\t\t', '')
 }
 
+// calculates 2P% from FG% and 3P% cells
 const calculateTwos = (fgs, threes) => {
-  const twosMade = parseInt(fgs.split('-')[0]) - parseInt(threes.split('-')[0]);
-  const twosAtt = parseInt(fgs.split('-')[1]) - parseInt(threes.split('-')[1]);
-  const ratio = twosMade/twosAtt;
-  return ratio.toString().slice(1, 5);
+  return ((parseInt(fgs.split('-')[0]) - parseInt(threes.split('-')[0])) / (twosAtt = parseInt(fgs.split('-')[1]) - parseInt(threes.split('-')[1]))).toString().slice(1, 5);
+}
+
+const populateTeamData = (team, parent) => {
+  // road and home cells are adjacent
+  i = (team === 'road') ? 0 : 1;
+  return {
+    twos: calculateTwos(deleteSpace(parent[1 + i].children[0].data), deleteSpace(parent[7 + i].children[0].data)),
+    threes: '.' + deleteSpace(parent[10 + i].children[0].data).replace('.', ''),
+    reb: deleteSpace(parent[19 + i].children[0].data),
+    ast: deleteSpace(parent[31 + i].children[0].data),
+    to: deleteSpace(parent[40 + i].children[0].data)
+  }
 }
 
 router.get('/', function(req, res, next) {
@@ -27,33 +32,23 @@ router.get('/', function(req, res, next) {
   axios.get(url)
     .then(res => {
       let $ = cheerio.load(res.data);
-      const road = {};
-      const home = {};
-      const cells = $('.mod-data tbody').children('tr').children('td');
-      road.pts = $('.score.icon-font-after')[0].children[0].data;
-      road.twos = calculateTwos(deleteSpace(cells[1].children[0].data), deleteSpace(cells[7].children[0].data));
-      let rawThrees = deleteSpace(cells[10].children[0].data)
-      road.threes = '.' + rawThrees.replace('.', '')
-      road.reb = deleteSpace(cells[19].children[0].data);
-      road.ast = deleteSpace(cells[31].children[0].data);
-      road.to = deleteSpace(cells[40].children[0].data);
-      home.pts = $('.score.icon-font-before')[0].children[0].data;
-      home.twos = calculateTwos(deleteSpace(cells[2].children[0].data), deleteSpace(cells[8].children[0].data));
-      rawThrees = deleteSpace(cells[11].children[0].data)
-      home.threes = '.' + rawThrees.replace('.', '')
-      home.reb = deleteSpace(cells[20].children[0].data);
-      home.ast = deleteSpace(cells[32].children[0].data);
-      home.to = deleteSpace(cells[41].children[0].data);
-      const confirm = $('body #global-viewport #pane-main #custom-nav #gamepackage-header-wrap #gamepackage-matchup-wrap').children().first().find('.status-detail');
-      const data = {road: road, home: home, confirm: confirm[0].children[0].data}
+      let parent = $('.mod-data tbody').children('tr').children('td');
+      // stats
+      const data = {road: populateTeamData('road', parent), home: populateTeamData('home', parent)};
+      // points
+      data.road.pts = $('.score.icon-font-after')[0].children[0].data;
+      data.home.pts = $('.score.icon-font-before')[0].children[0].data;
+      // clock
+      parent = $('body #global-viewport #pane-main #custom-nav #gamepackage-header-wrap #gamepackage-matchup-wrap').children().first().find('.status-detail');
+      data.clock = parent[0].children[0].data;
       return data;
     })
     .then(data => {
-      console.log('SUCCESS!');
+      console.log('IN-GAME DATA RETRIEVED!');
       res.json(data);
     })
     .catch(err => {
-      console.log('there has been an error: ', err)
+      console.log('there has been an error retrieving in-game data: ', err)
     });
 
 });

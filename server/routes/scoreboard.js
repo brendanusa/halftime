@@ -11,8 +11,8 @@ router.get('/', (req, res, next) => {
   axios.get(url)
     .then(res => {
       let $ = cheerio.load(res.data);
+      //game IDs (and all scoreboard data) live inside massive, unpleasant script tag
       const links = $('head').children('script').last()
-      //insanity
       const scoreboardDataString = links[0].children[0].data.replace('window.espn.scoreboardData \t= ', '');
       const scoreboardDataEvents = JSON.parse(scoreboardDataString.slice(0, scoreboardDataString.indexOf(';window.espn.scoreboardSettings'))).events;
       let gameIDs = '';

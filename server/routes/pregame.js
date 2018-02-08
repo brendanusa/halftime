@@ -3,6 +3,7 @@ const router = express.Router();
 const cheerio = require('cheerio');
 const axios = require ('axios');
 
+// map espn school names to ncaa bbref names
 const schoolNameMap = {
   'tenn-martin': 'tennessee-martin',
   'siu-edwardsville': 'southern-illinois-edwardsville',
@@ -86,7 +87,7 @@ const schoolNameMap = {
   'unc-asheville': 'north-carolina-asheville'
 }
 
-const buildTeamObj = (team, data) => {
+const populateTeamData = (team, data) => {
   data[team].srs = parent[5].children[1].data.split('(')[0].replace(' ', '').slice(0, -1);
   data[team].sos = parent[6].children[1].data.split('(')[0].replace(' ', '').slice(0, -1);
   parent = $('#team_stats tbody').children().first();
@@ -115,6 +116,7 @@ router.get('/', (req, res, next) => {
       const home = {school: parent[0].children[0].data.split(' vs. ')[1].split(' - ')[0].replace(' ', '-').toLowerCase()};
       const data = {id: req.query.id, road: road, home: home};
       parent = ($('body  #global-viewport #pane-main #custom-nav #gamepackage-header-wrap #gamepackage-matchup-wrap header .competitors .game-status span[data-behavior="date_time"]'));
+      // if no start time listed, game can be considered final (unavailable for automatic halftime update)
       data.tipoff = parent[0] ? parent[0].attribs['data-date'] : 'final';
       return data;
     })
@@ -129,7 +131,7 @@ router.get('/', (req, res, next) => {
         .then(res => {
           $ = cheerio.load(res.data);
           parent = $('#meta').children().first().next().children('p');
-          buildTeamObj('road', data);
+          populateTeamData('road', data);
           return data;
         })
     })
@@ -144,7 +146,7 @@ router.get('/', (req, res, next) => {
         .then(res => {
           $ = cheerio.load(res.data);
           parent = $('#meta').children().first().next().children('p');
-          buildTeamObj('home', data);
+          populateTeamData('home', data);
           return data;
         })
     })
@@ -152,10 +154,8 @@ router.get('/', (req, res, next) => {
       res.json(data);
     })
     .catch(err => {
-      console.log('there has been an error - check school name')
+      console.log('there has been an error retrieving pregame data')
     });
-
-
 
 })
 
