@@ -16,7 +16,10 @@ class Ncaa extends Component {
   }
 
   handleIDsChange(event) {
-    this.setState({newGameIDs: [event.target.value]});
+    this.setState({
+      clicked: false,
+      newGameIDs: [event.target.value]
+    });
   }
 
   handleIDsSubmit(event) {
@@ -30,8 +33,7 @@ class Ncaa extends Component {
         .then(() => {
           console.log('GAME RETRIEVED!', this.state);
           i++
-          idsArr[i] ? fetchGame(idsArr[i]) : null;
-          return;
+          return idsArr[i] ? fetchGame(idsArr[i]) : null;
         })
     }
     fetchGame(idsArr[i]);
@@ -68,7 +70,7 @@ class Ncaa extends Component {
       <h1 style={{"textAlign": "left"}}>NCAA</h1>
         <div>
           {this.state.games.map(game =>
-            <Game game={game} league="mens-college-basketball" clicked={this.state.clicked} delay={this.state.updateMultipleDelay} />
+            <Game game={game} key={game.id} league="mens-college-basketball" clicked={this.state.clicked} delay={this.state.updateMultipleDelay} />
           )}
         </div>
         <div id="actions-container">

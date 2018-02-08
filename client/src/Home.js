@@ -8,13 +8,13 @@ const Home = () => (
     <h4>A CSV data generator for lovers of basketball and commas</h4>
     <div>
       <span>
-        <Link class='lynx' to='/nba' style={{width:"320px;"}}>
-          <img src={require('./assets/napier-nba.jpg')} alt='nba' style={{width:"320px;"}} />
+        <Link className="lynx" to="/nba" style={{width:"320px"}}>
+          <img src={require('./assets/napier-nba.jpg')} alt="nba" style={{width:"320px"}} />
         </Link>
       </span>
       <span>
-        <Link class='lynx' to='/ncaa' style={{width:"345px;"}}>
-          <img src={require('./assets/napier-ncaa.jpg')} alt='ncaa' style={{width:"345px;"}} />
+        <Link className="lynx" to="/ncaa" style={{width:"345px"}}>
+          <img src={require('./assets/napier-ncaa.jpg')} alt="ncaa" style={{width:"345px"}} />
         </Link>
       </span>
     </div>

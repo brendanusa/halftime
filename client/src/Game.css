@@ -1,0 +1,10 @@
+.game {
+  padding: 1px;
+  margin-top: 2px;
+  border-radius: 4px;
+  background-color: #D0EEFB;
+}
+
+.game button {
+  font-size: 10px;
+}

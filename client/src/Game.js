@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './Game.css'
 
 const schedule = require('node-schedule');
 
@@ -14,19 +15,20 @@ class Game extends Component {
 
   task() {
     if (this.props.game.tipoff === 'in progress') {
-      console.log('game already in progress - must retrieve halftime data manually!')
+      console.log(`game ${this.props.game.id} already in progress - must retrieve halftime data manually!`)
     } else if (this.props.game.tipoff !== 'final') {
       // retrieve halftime data 56 mins (in ms) after tipoff
       let halftime = new Date(this.props.game.tipoff);
       halftime = new Date(halftime.getTime() + 3360000);
       schedule.scheduleJob(halftime, () => {
-        console.log(`GAME ID ${this.props.game.id} HALFTIME DATA RETRIEVED AT: `, new Date());
+        console.log(`GAME ${this.props.game.id} HALFTIME DATA RETRIEVED AT: `, new Date());
         this.handleClick();
       });
     }
   }
 
   handleClick() {
+    // should switch statement be used here?
     switch(this.state.gameStateDisplay) {
       case 'It\'s over!':
         var url = `/ingame?league=${this.props.league}&id=${this.props.game.id}`;
@@ -105,7 +107,7 @@ class Game extends Component {
   render() {
     return (
       <div>
-        <div>
+        <div className="game">
           {this.props.game.id},
           {this.props.game.tipoff || 'in progress'},
 
