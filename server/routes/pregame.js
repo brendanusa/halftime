@@ -3,7 +3,7 @@ const router = express.Router();
 const cheerio = require('cheerio');
 const axios = require ('axios');
 
-// map espn school names to ncaa bbref names
+// map espn school names to ncaa bb ref names
 const schoolNameMap = {
   'tenn-martin': 'tennessee-martin',
   'siu-edwardsville': 'southern-illinois-edwardsville',
@@ -84,7 +84,10 @@ const schoolNameMap = {
   'texas-a&m-cc': 'texas-am-corpus-christi',
   'se-louisiana': 'southeastern-louisiana',
   'st.-john\'s': 'st-johns-ny',
-  'unc-asheville': 'north-carolina-asheville'
+  'unc-asheville': 'north-carolina-asheville',
+  'ut-rio grande valley': 'texas-pan-american',
+  'umkc': 'missouri-kansas-city',
+  'new-mexico state': 'new-mexico-state'
 }
 
 const populateTeamData = (team, data) => {

@@ -1,10 +1,16 @@
+@keyframes GameFlash {
+  5% {background-color: #FFCB78}
+}
+
 .game {
   padding: 1px;
   margin-top: 2px;
   border-radius: 4px;
   background-color: #D0EEFB;
+  animation: GameFlash 0.5s ease-out
 }
 
 .game button {
   font-size: 10px;
+  animation: GameFlash 0.5s ease-out
 }

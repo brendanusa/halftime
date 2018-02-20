@@ -13,6 +13,7 @@ class Ncaa extends Component {
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleDateSubmit = this.handleDateSubmit.bind(this);
     this.handleClickAll = this.handleClickAll.bind(this);
+    this.clearGames = this.clearGames.bind(this);
   }
 
   handleIDsChange(event) {
@@ -64,6 +65,12 @@ class Ncaa extends Component {
     })
   }
 
+  clearGames() {
+    this.setState({
+      games: []
+    })
+  }
+
   render() {
     return (
       <div className="ncaa">
@@ -74,7 +81,7 @@ class Ncaa extends Component {
           )}
         </div>
         <div id="actions-container">
-          <div className="actions">
+          <div className="actions" id="ids">
             <form onSubmit={this.handleIDsSubmit}>
               Enter Game IDs (separate with commas to select multiple):
               <input type="text" value={this.newGameIDs} onChange={this.handleIDsChange} />
@@ -84,7 +91,7 @@ class Ncaa extends Component {
           <div>
             -OR-
           </div>
-          <div className="actions">
+          <div className="actions" id="date">
             <form onSubmit={this.handleDateSubmit}>
               Enter Date to load all games on that day (YYYYMMDD):
               <input type="text" onChange={this.handleDateChange} />
@@ -97,6 +104,9 @@ class Ncaa extends Component {
           <div className="actions">
             Click here to retrieve data for all games:
             <button type="button" onClick={this.handleClickAll}>Update All</button>
+          </div>
+          <div>
+            <button type="button" onClick={this.clearGames}>Clear All</button>
           </div>
         </div>
       </div>

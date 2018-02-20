@@ -20,6 +20,7 @@ class Game extends Component {
       // retrieve halftime data 56 mins (in ms) after tipoff
       let halftime = new Date(this.props.game.tipoff);
       halftime = new Date(halftime.getTime() + 3360000);
+      console.log(this.props.game.id, halftime)
       schedule.scheduleJob(halftime, () => {
         console.log(`GAME ${this.props.game.id} HALFTIME DATA RETRIEVED AT: `, new Date());
         this.handleClick();

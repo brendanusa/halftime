@@ -6,6 +6,7 @@ const axios = require ('axios');
 let url = 'http://www.espn.com/mens-college-basketball/scoreboard/_/group/50/date/';
 
 router.get('/', (req, res, next) => {
+  console.log('date', req.query.date)
   url += req.query.date;
   console.log('URL', url)
   axios.get(url)
