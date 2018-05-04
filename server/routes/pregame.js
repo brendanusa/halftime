@@ -92,7 +92,9 @@ const schoolNameMap = {
 
 const nbaTeamMap = {
   'mavericks': 'DAL',
-  'pistons': 'DET'
+  'pistons': 'DET',
+  'pelicans': 'NOP',
+  'warriors': 'GSW'
 }
 
 const populateNcaaTeamData = (team, data) => {
@@ -113,17 +115,33 @@ const populateNcaaTeamData = (team, data) => {
 }
 
 const populateNbaTeamData = (team, data) => {
-  data[team].srs = parent[6].children[2].data.split(' ')[1];
-  parent = $('#team_and_opponent').children().first();
-  const games = parseInt(parent[0].children[1].children[0].data);
-  data[team].twos = parent[0].children[8].children[0].data;
-  data[team].threes = parent[0].children[11].children[0].data;
-  const oppParent = $('#team_stats tbody').children().first().next().next();
-  data[team].opptwos = oppParent[0].children[8].children[0].data;
-  data[team].oppthrees = oppParent[0].children[11].children[0].data;
-  data[team].rebdiff = ((parseInt(parent[0].children[17].children[0].data) - parseInt(oppParent[0].children[17].children[0].data)) / games).toString().slice(0, 5);
-  data[team].astdiff = ((parseInt(parent[0].children[18].children[0].data) - parseInt(oppParent[0].children[18].children[0].data)) / games).toString().slice(0, 5);
-  data[team].todiff = ((parseInt(parent[0].children[21].children[0].data) - parseInt(oppParent[0].children[21].children[0].data)) / games).toString().slice(0, 5);
+  // placeholders
+  data[team].sos = 0;
+  data[team].srs = 0;
+  let dataString = parent[0].next.next.data.slice(3711);
+  // console.log('118', dataString)
+  let startIndex = dataString.indexOf('data-stat="g" >');
+  const games = dataString.slice(startIndex + 15, startIndex + 17);
+  startIndex = dataString.indexOf('"fg2_pct"');
+  data[team].twos = dataString.slice(startIndex + 11, startIndex + 15);
+  startIndex = dataString.indexOf('"fg3_pct"');
+  data[team].threes = dataString.slice(startIndex + 11, startIndex + 15);
+  startIndex = dataString.indexOf('"opp_fg2_pct"');
+  data[team].opptwos = dataString.slice(startIndex + 15, startIndex + 19)
+  startIndex = dataString.indexOf('"opp_fg3_pct"');
+  data[team].oppthrees = dataString.slice(startIndex + 15, startIndex + 19)
+  startIndex = dataString.indexOf('"trb_per_g"');
+  // let endIndex = dataString.slice(startIndex).indexOf('<');
+  const rebs = parseInt(dataString.slice(startIndex + 13, startIndex + 17));
+  startIndex = dataString.indexOf('"opp_trb_per_g"');
+  const opprebs = parseInt(dataString.slice(startIndex + 17, startIndex + 21));
+  data[team].rebdiff = rebs - opprebs;
+  // placeholder
+  data[team].astdiff = 0;
+  // get TOV% diff below instead (get reb% above)
+  data[team].todiff = 0;
+
+  console.log('126', data);
 }
 
 router.get('/', (req, res, next) => {
@@ -158,26 +176,20 @@ console.log('url', url)
         url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
       }
       if (league === 'nba') {
-        if (nbaTeamMap[data.road.school]) {
-          data.road.school = nbaTeamMap[data.road.school];
-        }
+        data.road.school = nbaTeamMap[data.road.school];
         url = `https://www.basketball-reference.com/teams/${data.road.school}/2018.html`;
         console.log('146', url)
       }
       return axios.get(url)
         .then(res => {
-          console.log('169')
           $ = cheerio.load(res.data);
-          parent = $('#meta').children().first().next().children('p');
-          parent = $('#all_team_and_opponent .placeholder');
-          // parent = $('table')
           if (league === 'mens-college-basketball') {
+            parent = $('#meta').children().first().next().children('p');
             populateNcaaTeamData('road', data);
           }
           if (league === 'nba') {
-            console.log('175', parent[0].next.next.data.indexOf('data-stat="g" >'))
-            console.log(parent[0].next.next.data.slice(3726, 3728))
-            // populateNbaTeamData('road', data);
+            parent = $('#all_team_and_opponent .placeholder');
+            populateNbaTeamData('road', data);
           }
           return data;
         })
@@ -185,23 +197,25 @@ console.log('url', url)
     // HOME
     .then(data => {
       console.log('HOME TEAM', data.home.school)
-      if (req.query.league === 'mens-college-basketball') {
+      if (league === 'mens-college-basketball') {
         if (schoolNameMap[data.road.school]) {
           data.road.school = schoolNameMap[data.road.school];
         }
-        url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
+        url = `https://www.sports-reference.com/cbb/schools/${data.home.school}/2018.html`;
       }
       if (req.query.league === 'nba') {
-        url = `https://www.basketball-reference.com/teams/${data.road.school}/2018.html`;
+        data.home.school = nbaTeamMap[data.home.school];
+        url = `https://www.basketball-reference.com/teams/${data.home.school}/2018.html`;
       }
       return axios.get(url)
         .then(res => {
           $ = cheerio.load(res.data);
-          parent = $('#meta').children().first().next().children('p');
           if (league === 'mens-college-basketball') {
+            parent = $('#meta').children().first().next().children('p');
             populateNcaaTeamData('home', data);
           }
           if (league === 'nba') {
+            parent = $('#all_team_and_opponent .placeholder');
             populateNbaTeamData('home', data);
           }
           return data;
