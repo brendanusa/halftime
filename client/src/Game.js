@@ -81,7 +81,7 @@ class Game extends Component {
                 ast: res.data.home.ast,
                 to: res.data.home.to
               },
-              confirm: res.data.confirm
+              clock: res.data.clock
             },
             gameStateDisplay: 'It\'s over!'})
           )
@@ -114,7 +114,7 @@ class Game extends Component {
 
           {this.props.game.road.school},
           {this.props.game.road.srs},
-          {this.props.game.road.sos},
+          {this.props.game.road.sos || null},
           {this.props.game.road.twos},
           {this.props.game.road.threes},
           {this.props.game.road.opptwos},
@@ -166,7 +166,7 @@ class Game extends Component {
           {this.state.full.home.ast || null},
           {this.state.full.home.to || null},
 
-          {this.state.half.confirm || null},
+          {this.state.half.clock || null},
 
             <button onClick={this.handleClick}>{this.state.gameStateDisplay}</button>
           </div>

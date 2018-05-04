@@ -90,7 +90,12 @@ const schoolNameMap = {
   'new-mexico state': 'new-mexico-state'
 }
 
-const populateTeamData = (team, data) => {
+const nbaTeamMap = {
+  'mavericks': 'DAL',
+  'pistons': 'DET'
+}
+
+const populateNcaaTeamData = (team, data) => {
   data[team].srs = parent[5].children[1].data.split('(')[0].replace(' ', '').slice(0, -1);
   data[team].sos = parent[6].children[1].data.split('(')[0].replace(' ', '').slice(0, -1);
   parent = $('#team_stats tbody').children().first();
@@ -107,9 +112,29 @@ const populateTeamData = (team, data) => {
   return data;
 }
 
+const populateNbaTeamData = (team, data) => {
+  data[team].srs = parent[6].children[2].data.split(' ')[1];
+  parent = $('#team_and_opponent').children().first();
+  const games = parseInt(parent[0].children[1].children[0].data);
+  data[team].twos = parent[0].children[8].children[0].data;
+  data[team].threes = parent[0].children[11].children[0].data;
+  const oppParent = $('#team_stats tbody').children().first().next().next();
+  data[team].opptwos = oppParent[0].children[8].children[0].data;
+  data[team].oppthrees = oppParent[0].children[11].children[0].data;
+  data[team].rebdiff = ((parseInt(parent[0].children[17].children[0].data) - parseInt(oppParent[0].children[17].children[0].data)) / games).toString().slice(0, 5);
+  data[team].astdiff = ((parseInt(parent[0].children[18].children[0].data) - parseInt(oppParent[0].children[18].children[0].data)) / games).toString().slice(0, 5);
+  data[team].todiff = ((parseInt(parent[0].children[21].children[0].data) - parseInt(oppParent[0].children[21].children[0].data)) / games).toString().slice(0, 5);
+}
+
 router.get('/', (req, res, next) => {
 
-  let url = 'http://www.espn.com/mens-college-basketball/matchup?gameId=' + req.query.id;
+  // let url = 'http://www.espn.com/mens-college-basketball/matchup?gameId=' + req.query.id;
+
+  let league = req.query.league;
+
+  let url = `http://www.espn.com/${league}/matchup?gameId=${req.query.id}`;
+
+console.log('url', url)
 
   axios.get(url)
     .then(res => {
@@ -126,30 +151,59 @@ router.get('/', (req, res, next) => {
     // ROAD
     .then(data => {
       console.log('ROAD TEAM', data.road.school)
-      if (schoolNameMap[data.road.school]) {
-        data.road.school = schoolNameMap[data.road.school];
+      if (league === 'mens-college-basketball') {
+        if (schoolNameMap[data.road.school]) {
+          data.road.school = schoolNameMap[data.road.school];
+        }
+        url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
       }
-      url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
+      if (league === 'nba') {
+        if (nbaTeamMap[data.road.school]) {
+          data.road.school = nbaTeamMap[data.road.school];
+        }
+        url = `https://www.basketball-reference.com/teams/${data.road.school}/2018.html`;
+        console.log('146', url)
+      }
       return axios.get(url)
         .then(res => {
+          console.log('169')
           $ = cheerio.load(res.data);
           parent = $('#meta').children().first().next().children('p');
-          populateTeamData('road', data);
+          parent = $('#all_team_and_opponent .placeholder');
+          // parent = $('table')
+          if (league === 'mens-college-basketball') {
+            populateNcaaTeamData('road', data);
+          }
+          if (league === 'nba') {
+            console.log('175', parent[0].next.next.data.indexOf('data-stat="g" >'))
+            console.log(parent[0].next.next.data.slice(3726, 3728))
+            // populateNbaTeamData('road', data);
+          }
           return data;
         })
     })
     // HOME
     .then(data => {
       console.log('HOME TEAM', data.home.school)
-      if (schoolNameMap[data.home.school]) {
-        data.home.school = schoolNameMap[data.home.school];
+      if (req.query.league === 'mens-college-basketball') {
+        if (schoolNameMap[data.road.school]) {
+          data.road.school = schoolNameMap[data.road.school];
+        }
+        url = `https://www.sports-reference.com/cbb/schools/${data.road.school}/2018.html`;
       }
-      url = `https://www.sports-reference.com/cbb/schools/${data.home.school}/2018.html`;
+      if (req.query.league === 'nba') {
+        url = `https://www.basketball-reference.com/teams/${data.road.school}/2018.html`;
+      }
       return axios.get(url)
         .then(res => {
           $ = cheerio.load(res.data);
           parent = $('#meta').children().first().next().children('p');
-          populateTeamData('home', data);
+          if (league === 'mens-college-basketball') {
+            populateNcaaTeamData('home', data);
+          }
+          if (league === 'nba') {
+            populateNbaTeamData('home', data);
+          }
           return data;
         })
     })

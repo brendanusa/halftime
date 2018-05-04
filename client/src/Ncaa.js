@@ -28,7 +28,7 @@ class Ncaa extends Component {
     var idsArr = idsStr.split(',');
     let i = 0;
     const fetchGame = (gameID) => {
-      var url = '/pregame?id=' + gameID
+      var url = '/pregame?league=mens-college-basketball&id=' + gameID
       axios.get(url)
         .then(res => this.setState({games: this.state.games.concat([res.data])}))
         .then(() => {
