@@ -94,7 +94,9 @@ const nbaTeamMap = {
   'mavericks': 'DAL',
   'pistons': 'DET',
   'pelicans': 'NOP',
-  'warriors': 'GSW'
+  'warriors': 'GSW',
+  'cavaliers': 'CLE',
+  'celtics': 'BOS'
 }
 
 const populateNcaaTeamData = (team, data) => {
@@ -115,33 +117,47 @@ const populateNcaaTeamData = (team, data) => {
 }
 
 const populateNbaTeamData = (team, data) => {
-  // placeholders
-  data[team].sos = 0;
-  data[team].srs = 0;
-  let dataString = parent[0].next.next.data.slice(3711);
-  // console.log('118', dataString)
-  let startIndex = dataString.indexOf('data-stat="g" >');
-  const games = dataString.slice(startIndex + 15, startIndex + 17);
-  startIndex = dataString.indexOf('"fg2_pct"');
-  data[team].twos = dataString.slice(startIndex + 11, startIndex + 15);
+  let dataString = mainTableParent[0].next.next.data.slice(3711);
+  let startIndex = dataString.indexOf('"fg2_pct"');
+  data[team].o2pt = dataString.slice(startIndex + 11, startIndex + 15);
   startIndex = dataString.indexOf('"fg3_pct"');
-  data[team].threes = dataString.slice(startIndex + 11, startIndex + 15);
+  data[team].o3pt = dataString.slice(startIndex + 11, startIndex + 15);
   startIndex = dataString.indexOf('"opp_fg2_pct"');
-  data[team].opptwos = dataString.slice(startIndex + 15, startIndex + 19)
+  data[team].d2pt = dataString.slice(startIndex + 15, startIndex + 19);
   startIndex = dataString.indexOf('"opp_fg3_pct"');
-  data[team].oppthrees = dataString.slice(startIndex + 15, startIndex + 19)
-  startIndex = dataString.indexOf('"trb_per_g"');
-  // let endIndex = dataString.slice(startIndex).indexOf('<');
-  const rebs = parseInt(dataString.slice(startIndex + 13, startIndex + 17));
-  startIndex = dataString.indexOf('"opp_trb_per_g"');
-  const opprebs = parseInt(dataString.slice(startIndex + 17, startIndex + 21));
-  data[team].rebdiff = rebs - opprebs;
-  // placeholder
-  data[team].astdiff = 0;
-  // get TOV% diff below instead (get reb% above)
-  data[team].todiff = 0;
+  data[team].d3pt = dataString.slice(startIndex + 15, startIndex + 19);
+  startIndex = dataString.indexOf('"ft_pct"');
+  data[team].ft = dataString.slice(startIndex + 10, startIndex + 14);
 
-  console.log('126', data);
+  // actual table below begins at index 6024 in the placeholder string
+  dataString = miscTableParent[0].next.next.data.slice(6024);
+
+  // helper function to record numbers of differing lengths
+  const recordNumber = function(firstIndex) {
+    let statString = '';
+    let i = 0;
+    while (dataString[firstIndex + i] !== '<') {
+      statString += dataString[firstIndex + i];
+      i++;
+    }
+    return statString;
+  }
+
+  data[team].sos = recordNumber(dataString.indexOf("sos") + 6);
+  data[team].srs = recordNumber(dataString.indexOf("srs") + 6);
+  data[team].mov = recordNumber(dataString.indexOf("mov") + 6);
+  data[team].oRtg = recordNumber(dataString.indexOf("off_rtg") + 10);
+  data[team].dRtg = recordNumber(dataString.indexOf("def_rtg") + 10);
+  data[team].oEfg = recordNumber(dataString.indexOf("efg_pct") + 10);
+  data[team].dEfg = recordNumber(dataString.indexOf("opp_efg_pct") + 14);
+  data[team].oFtFga = recordNumber(dataString.indexOf("ft_rate") + 10);
+  data[team].dFtFga = recordNumber(dataString.indexOf("opp_ft_rate") + 14);
+  data[team].oTov = recordNumber(dataString.indexOf("tov_pct") + 10);
+  data[team].dTov = recordNumber(dataString.indexOf("opp_tov_pct") + 14);
+  data[team].oReb = recordNumber(dataString.indexOf("orb_pct") + 10);
+  data[team].dReb = recordNumber(dataString.indexOf("drb_pct") + 10);
+
+  console.log('DATA', data);
 }
 
 router.get('/', (req, res, next) => {
@@ -188,7 +204,8 @@ console.log('url', url)
             populateNcaaTeamData('road', data);
           }
           if (league === 'nba') {
-            parent = $('#all_team_and_opponent .placeholder');
+            mainTableParent = $('#all_team_and_opponent .placeholder');
+            miscTableParent = $('#all_team_misc .placeholder');
             populateNbaTeamData('road', data);
           }
           return data;
@@ -215,8 +232,9 @@ console.log('url', url)
             populateNcaaTeamData('home', data);
           }
           if (league === 'nba') {
-            parent = $('#all_team_and_opponent .placeholder');
-            populateNbaTeamData('home', data);
+            mainTableParent = $('#all_team_and_opponent .placeholder');
+            miscTableParent = $('#all_team_misc .placeholder');
+            populateNbaTeamData('road', data);
           }
           return data;
         })

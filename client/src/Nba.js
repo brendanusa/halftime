@@ -82,7 +82,7 @@ class Nba extends Component {
         <div id="actions-container">
           <div className="actions" id="ids">
             <form onSubmit={this.handleIDsSubmit}>
-              Enter Game IDs (separate with commas to select multiple):
+              Enter Game IDs (separate with commas to select multiple - example: 401032841):
               <input type="text" value={this.newGameIDs} onChange={this.handleIDsChange} />
               <input type="submit" value="Submit" />
             </form>
