@@ -144,6 +144,8 @@ const populateNbaTeamData = (team, data) => {
     return statString;
   }
 
+  console.log('DATASTRING', dataString)
+
   data[team].sos = recordNumber(dataString.indexOf("sos") + 6);
   data[team].srs = recordNumber(dataString.indexOf("srs") + 6);
   data[team].mov = recordNumber(dataString.indexOf("mov") + 6);

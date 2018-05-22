@@ -16,13 +16,41 @@ const calculateTwos = (fgs, threes) => {
 const populateTeamData = (team, parent) => {
   // road and home cells are adjacent
   i = (team === 'road') ? 0 : 1;
+  const fgMade = parseInt(deleteSpace(parent[1 + i].children[0].data).split('-')[0]);
+  const fgAtt = parseInt(deleteSpace(parent[1 + i].children[0].data).split('-')[1])
+  const threesMade = parseInt(deleteSpace(parent[7 + i].children[0].data).split('-')[0]);
+  const threesAtt = parseInt(deleteSpace(parent[7 + i].children[0].data).split('-')[1]);
+  const twosMade = fgMade - threesMade;
+  const twosAtt = fgAtt - threesAtt;
+  const ftMade = parseInt(deleteSpace(parent[13 + i].children[0].data).split('-')[0]);
+  const ftAtt = parseInt(deleteSpace(parent[13 + i].children[0].data).split('-')[1]);
+  const oReb = deleteSpace(parent[22 + i].children[0].data);
+  const dReb = deleteSpace(parent[25 + i].children[0].data);
+  const ast = deleteSpace(parent[28 + i].children[0].data);
+  const tov = deleteSpace(parent[37 + i].children[0].data);
+  // const twos = parseFloat(calculateTwos(deleteSpace(parent[1 + i].children[0].data), deleteSpace(parent[7 + i].children[0].data)));
+  // const threes = parseFloat('.' + deleteSpace(parent[10 + i].children[0].data).replace('.', ''));
+
   return {
-    twos: calculateTwos(deleteSpace(parent[1 + i].children[0].data), deleteSpace(parent[7 + i].children[0].data)),
-    threes: '.' + deleteSpace(parent[10 + i].children[0].data).replace('.', ''),
-    reb: deleteSpace(parent[19 + i].children[0].data),
-    ast: deleteSpace(parent[31 + i].children[0].data),
-    to: deleteSpace(parent[40 + i].children[0].data)
+    fgMade: fgMade,
+    fgAtt: fgAtt,
+    threesMade: threesMade,
+    threesAtt: threesAtt,
+    twosMade: twosMade,
+    twosAtt: twosAtt,
+    ftMade: ftMade,
+    ftAtt: ftAtt,
+    oReb: oReb,
+    dReb: dReb,
+    ast: ast,
+    tov: tov,
+    '2pt': twosMade / twosAtt,
+    '3pt': threesMade / threesAtt,
+    ft: ftMade / ftAtt,
+    efg: (twosMade + 1.5 * threesMade) / fgAtt,
+    ftFga: ftMade / fgAtt
   }
+
 }
 
 router.get('/', function(req, res, next) {
@@ -41,6 +69,18 @@ router.get('/', function(req, res, next) {
       // clock
       parent = $('body #global-viewport #pane-main #custom-nav #gamepackage-header-wrap #gamepackage-matchup-wrap').children().first().find('.status-detail');
       data.clock = parent[0].children[0].data;
+      console.log('INGAME DATA', data)
+
+      data.act2ptDiff = data.home['2pt'] - data.road['2pt'];
+      data.act3ptDiff = data.home['3pt'] - data.road['3pt'];
+      data.actEfgDiff = data.home.efg - data.road.efg;
+      data.actFtFgaDiff = data.home.ftFga - data.road.ftFga;
+      data.actFtDiff = data.home.ft - data.road.ft;
+      data.actTovDiff = data.hom.tov - data.road.tov;
+      data.actAstDiff = data.home.ast - data.road.ast;
+      data.actHDReb = data.home.dReb - data.road.oReb;
+      data.actRDReb = data.road.dReb - data.home.oReb;
+
       return data;
     })
     .then(data => {

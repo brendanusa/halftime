@@ -159,7 +159,39 @@ class Game extends Component {
           {this.props.game.xFtDiff},
           {this.props.game.xTovDiff},
           {this.props.game.xHDReb},
-          {this.props.game.xRDReb}
+          {this.props.game.xRDReb},
+
+          {this.props.game.road.school},
+          {this.state.half.road.pts || null},
+          {this.state.half.road.twos || null},
+          {this.state.half.road.threes || null},
+          {this.state.half.road.reb || null},
+          {this.state.half.road.ast || null},
+          {this.state.half.road.tov || null},
+
+          {this.props.game.home.school},
+          {this.state.half.home.pts || null},
+          {this.state.half.home.twos || null},
+          {this.state.half.home.threes || null},
+          {this.state.half.home.reb || null},
+          {this.state.half.home.ast || null},
+          {this.state.half.home.tov || null},
+
+          {this.props.game.road.school},
+          {this.state.full.road.pts || null},
+          {this.state.full.road.twos || null},
+          {this.state.full.road.threes || null},
+          {this.state.full.road.reb || null},
+          {this.state.full.road.ast || null},
+          {this.state.full.road.tov || null},
+
+          {this.props.game.home.school},
+          {this.state.full.home.pts || null},
+          {this.state.full.home.twos || null},
+          {this.state.full.home.threes || null},
+          {this.state.full.home.reb || null},
+          {this.state.full.home.ast || null},
+          {this.state.full.home.tov || null},
 
             <button onClick={this.handleClick}>{this.state.gameStateDisplay}</button>
           </div>
@@ -193,7 +225,7 @@ class Game extends Component {
           // {this.props.game.home.astdiff.toString().slice(0,5)},
           // {this.props.game.home.todiff.toString().slice(0,5)},
 
-                    // {this.props.game.road.school},
+          // {this.props.game.road.school},
           // {this.state.half.road.pts || null},
           // {this.state.half.road.twos || null},
           // {this.state.half.road.threes || null},
