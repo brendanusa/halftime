@@ -144,7 +144,7 @@ class Game extends Component {
           {this.props.game.road.d3pt},
           {this.props.game.road.oFtFga},
           {this.props.game.road.dFtFga},
-          {this.props.game.road.oFt},
+          {this.props.game.road.ft},
           {this.props.game.road.oTov},
           {this.props.game.road.dTov},
           {this.props.game.road.oReb},
@@ -158,8 +158,8 @@ class Game extends Component {
           {this.props.game.xFtFgaDiff},
           {this.props.game.xFtDiff},
           {this.props.game.xTovDiff},
-          {this.props.game.xHRebDiff},
-          {this.props.game.xARebDiff}
+          {this.props.game.xHDReb},
+          {this.props.game.xRDReb}
 
             <button onClick={this.handleClick}>{this.state.gameStateDisplay}</button>
           </div>

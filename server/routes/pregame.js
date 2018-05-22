@@ -96,7 +96,8 @@ const nbaTeamMap = {
   'pelicans': 'NOP',
   'warriors': 'GSW',
   'cavaliers': 'CLE',
-  'celtics': 'BOS'
+  'celtics': 'BOS',
+  'rockets': 'HOU',
 }
 
 const populateNcaaTeamData = (team, data) => {
@@ -156,8 +157,6 @@ const populateNbaTeamData = (team, data) => {
   data[team].dTov = recordNumber(dataString.indexOf("opp_tov_pct") + 14);
   data[team].oReb = recordNumber(dataString.indexOf("orb_pct") + 10);
   data[team].dReb = recordNumber(dataString.indexOf("drb_pct") + 10);
-
-  console.log('DATA', data);
 }
 
 router.get('/', (req, res, next) => {
@@ -234,7 +233,19 @@ console.log('url', url)
           if (league === 'nba') {
             mainTableParent = $('#all_team_and_opponent .placeholder');
             miscTableParent = $('#all_team_misc .placeholder');
-            populateNbaTeamData('road', data);
+            populateNbaTeamData('home', data);
+
+            data.xMov = parseFloat(data.home.mov) - parseFloat(data.road.mov);
+            data.rtgDiff = parseFloat(data.home.oRtg) - parseFloat(data.road.dRtg) - parseFloat(data.road.oRtg) + parseFloat(data.home.dRtg);
+            data.efgDiff = parseFloat(data.home.oEfg) - parseFloat(data.road.dEfg) - parseFloat(data.road.oEfg) + parseFloat(data.home.dEfg);
+            data.x2ptDiff = (parseFloat(data.home.o2pt) - parseFloat(data.road.d2pt)) - (parseFloat(data.road.o2pt) + parseFloat(data.home.d2pt));
+            data.x3ptDiff = (parseFloat(data.home.o3pt) - parseFloat(data.road.d3pt)) - (parseFloat(data.road.o3pt) + parseFloat(data.home.d3pt));
+            data.xFtFgaDiff = (parseFloat(data.home.oFtFga) - parseFloat(data.road.dFtFga)) - (parseFloat(data.road.oFtFga) + parseFloat(data.home.dFtFga));
+            data.xFtDiff = parseFloat(data.home.ft) - parseFloat(data.road.ft);
+            data.xTovDiff = parseFloat(data.home.oTov) - parseFloat(data.road.dTov) - parseFloat(data.road.oTov) + parseFloat(data.home.dTov);
+            data.xHDReb = (parseFloat(data.home.dReb) + 1 - parseFloat(data.road.oReb)) / 2;
+            data.xRDReb = (parseFloat(data.road.dReb) + 1 - parseFloat(data.home.oReb)) / 2;
+            console.log('DATA', data);
           }
           return data;
         })
